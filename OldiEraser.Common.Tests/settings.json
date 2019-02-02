@@ -1,0 +1,10 @@
+{
+  "section": {
+    "fruits": {
+      "apple": "good",
+      "pea": "good",
+      "avocado": "notgood"
+    },
+    "foo" :  ""
+  }
+}

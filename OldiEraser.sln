@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OldiEraser.Wpf", "OldiEraser.Wpf\OldiEraser.Wpf.csproj", "{4D92587A-8AFE-487C-9B6F-B31F9E617B9A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4E044B91-8AF2-4716-BA53-0ECD1AAC25B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other", "Other", "{FC68F53D-A39F-4094-9ADE-C624FDCD47BA}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+		stylecop.json = stylecop.json
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OldiEraser.Core", "OldiEraser.Core\OldiEraser.Core.csproj", "{FB08330B-8DA1-4545-B6C1-59E5BA2336A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OldiEraser.Core.Tests", "OldiEraser.Core.Tests\OldiEraser.Core.Tests.csproj", "{2310DE5F-6124-4E85-9484-4315F73A501E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OldiEraser.Common", "OldiEraser.Common\OldiEraser.Common.csproj", "{AB0B8F83-A5DD-4099-B018-0944C583878E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OldiEraser.Common.Tests", "OldiEraser.Common.Tests\OldiEraser.Common.Tests.csproj", "{E6A412BF-324E-4D06-BE24-4CD8B6A678A2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D92587A-8AFE-487C-9B6F-B31F9E617B9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D92587A-8AFE-487C-9B6F-B31F9E617B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D92587A-8AFE-487C-9B6F-B31F9E617B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D92587A-8AFE-487C-9B6F-B31F9E617B9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB08330B-8DA1-4545-B6C1-59E5BA2336A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB08330B-8DA1-4545-B6C1-59E5BA2336A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB08330B-8DA1-4545-B6C1-59E5BA2336A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB08330B-8DA1-4545-B6C1-59E5BA2336A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2310DE5F-6124-4E85-9484-4315F73A501E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2310DE5F-6124-4E85-9484-4315F73A501E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2310DE5F-6124-4E85-9484-4315F73A501E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2310DE5F-6124-4E85-9484-4315F73A501E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB0B8F83-A5DD-4099-B018-0944C583878E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB0B8F83-A5DD-4099-B018-0944C583878E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB0B8F83-A5DD-4099-B018-0944C583878E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB0B8F83-A5DD-4099-B018-0944C583878E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6A412BF-324E-4D06-BE24-4CD8B6A678A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6A412BF-324E-4D06-BE24-4CD8B6A678A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6A412BF-324E-4D06-BE24-4CD8B6A678A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6A412BF-324E-4D06-BE24-4CD8B6A678A2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2310DE5F-6124-4E85-9484-4315F73A501E} = {4E044B91-8AF2-4716-BA53-0ECD1AAC25B6}
+		{E6A412BF-324E-4D06-BE24-4CD8B6A678A2} = {4E044B91-8AF2-4716-BA53-0ECD1AAC25B6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {75D88FB3-C755-4276-A631-404AF08EFEAB}
+	EndGlobalSection
+EndGlobal
