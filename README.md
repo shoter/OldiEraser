@@ -14,4 +14,4 @@ Core of the system was written in .NET Standard. You can easilly add new platfor
   - Program will go inside the directory and try to remove files inside. If there is a .oldieconfig file inside then it will use delete behaviour specified by the directory.
 
 
-![Example image](./img/Example.png)
+![Example image](https://raw.githubusercontent.com/shoter/OldiEraser/master/Img/Example.png)
