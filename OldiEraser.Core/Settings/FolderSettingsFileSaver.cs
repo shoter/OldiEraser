@@ -10,11 +10,17 @@ namespace OldiEraser.Core.Settings
 {
     public class FolderSettingsFileSaver : IFolderSettingsFileSaver
     {
-        public void Save(in FolderSettings folderSettings, string directoryPath)
+        public async Task SaveAsync(FolderSettings folderSettings, string directoryPath)
         {
             string filePath = Path.Combine(directoryPath, Global.settingFileName);
             var json = JsonConvert.SerializeObject(folderSettings, Formatting.Indented);
-            File.WriteAllText(filePath, json);
+            if(File.Exists(filePath))
+                File.SetAttributes(filePath, (~File.GetAttributes(filePath)) & FileAttributes.Hidden);
+
+            using (var writer = new StreamWriter(filePath, append: false))
+            {
+                await writer.WriteAsync(json);
+            }
             File.SetAttributes(filePath, File.GetAttributes(filePath) | FileAttributes.Hidden);
         }
     }

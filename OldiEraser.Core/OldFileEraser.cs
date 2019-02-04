@@ -1,4 +1,5 @@
 ﻿using OldiEraser.Common;
+using OldiEraser.Core.Scanning;
 using OldiEraser.Core.Settings;
 using System;
 using System.Collections.Generic;
@@ -11,60 +12,30 @@ namespace OldiEraser.Core
 {
     public class OldFileEraser : IOldFileEraser
     {
-        private readonly IFolderSettingsFileReader settingsReader;
-        private readonly IDateTimeProvider dateTimeProvider;
+        private readonly IOldiScanner scanner;
 
-        public OldFileEraser(IFolderSettingsFileReader settingsReader, IDateTimeProvider dateTimeProvider)
+        public OldFileEraser(IOldiScanner scanner)
         {
-            this.settingsReader = settingsReader;
-            this.dateTimeProvider = dateTimeProvider;
+            this.scanner = scanner;
         }
 
         public void EraseOldFiles(string directoryPath)
         {
-            FolderSettings settings = settingsReader.ReadFile(Path.Combine(directoryPath, Global.settingFileName));
-            if (settings == null)
-                return;
-
-            EraseOldFiles(directoryPath, settings);
-        }
-
-        protected void EraseOldFiles(string directoryPath, FolderSettings settings)
-        {
-            FolderSettings newSettings = settingsReader.ReadFile(Path.Combine(directoryPath, Global.settingFileName));
-
-            if (newSettings != null)
-                settings = newSettings;
-
-
-            string[] files = Directory.GetFiles(directoryPath, "*", SearchOption.TopDirectoryOnly);
-            foreach(var file in files)
+            scanner.Scan(directoryPath, r =>
             {
-                DateTime modificationTime = File.GetLastWriteTime(file);
+                if (r.Status != DetailedScanItemStatus.Deletion)
+                    return;
 
-                if(settings.IsOldEnoughToRemove(dateTimeProvider.Now, modificationTime))
+                switch(r.ItemType)
                 {
-                    File.Delete(file);
+                    case ItemType.Directory:
+                        Directory.Delete(r.Path, recursive: true);
+                        return;
+                    case ItemType.File:
+                        File.Delete(r.Path);
+                        return;
                 }
-            }
-
-            if(settings.DirectoriesDeleteBehaviour != DirectoriesDeleteBehaviour.DoNothing)
-            {
-                string[] directories = Directory.GetDirectories(directoryPath);
-                foreach(var directory in directories)
-                {
-                    if(settings.DirectoriesDeleteBehaviour == DirectoriesDeleteBehaviour.DeleteFilesInside)
-                    {
-                        EraseOldFiles(directory, settings);
-                    }
-                    else
-                    {
-                        DateTime modificationTime = Directory.GetLastWriteTime(directory);
-                        if (settings.IsOldEnoughToRemove(dateTimeProvider.Now, modificationTime))
-                            Directory.Delete(directory, recursive: true);
-                    }
-                }
-            }
+            });
         }
     }
 }

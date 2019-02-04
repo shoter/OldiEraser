@@ -10,14 +10,18 @@ namespace OldiEraser.Core.Settings
 {
     public class FolderSettingsFileReader : IFolderSettingsFileReader
     {
-        public virtual FolderSettings ReadFile(string directoryPath)
+        public virtual async Task<FolderSettings> ReadFileAsync(string directoryPath)
         {
             string filePath = Path.Combine(directoryPath, Global.settingFileName);
 
             if (File.Exists(filePath) == false)
                 return null;
 
-            return JsonConvert.DeserializeObject<FolderSettings>(File.ReadAllText(filePath));
+            using (var reader = new StreamReader(filePath))
+            {
+                string json = await reader.ReadToEndAsync().ConfigureAwait(continueOnCapturedContext: false);
+                return JsonConvert.DeserializeObject<FolderSettings>(json);
+            }
         }
     }
 }

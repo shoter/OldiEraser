@@ -8,6 +8,7 @@ namespace OldiEraser.Core.Settings
 {
     public interface IFolderSettingsFileReader
     {
-        FolderSettings ReadFile(string filePath);
+        Task<FolderSettings> ReadFileAsync(string directoryPath);
+
     }
 }

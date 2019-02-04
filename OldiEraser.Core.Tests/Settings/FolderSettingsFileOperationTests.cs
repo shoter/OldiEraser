@@ -21,15 +21,15 @@ namespace OldiEraser.Core.Tests.Settings
         [Fact]
         public void Settings_AfterSaveShouldBeAbleToload()
         {
-            createTempDirectory();
+            CreateTempDirectory();
 
             foreach (DirectoriesDeleteBehaviour behaviour in Enum.GetValues(typeof(DirectoriesDeleteBehaviour)).Cast<DirectoriesDeleteBehaviour>())
             {
-                deleteTempFileIfExists();
+                DeleteTempFileIfExists();
                 FolderSettings settings = new FolderSettings(dayAgeToRemove: 35, directoriesDeleteBehaviour: behaviour);
 
-                settingsSaver.Save(settings, tempFileDirectory);
-                FolderSettings loaded = settingsReader.ReadFile(tempFileDirectory);
+                settingsSaver.SaveAsync(settings, tempFileDirectory);
+                FolderSettings loaded = settingsReader.ReadFileAsync(tempFileDirectory).Result;
 
                 Assert.Equal(settings.DayAgeToRemove, loaded.DayAgeToRemove);
                 Assert.Equal(settings.DirectoriesDeleteBehaviour, loaded.DirectoriesDeleteBehaviour);
@@ -39,21 +39,21 @@ namespace OldiEraser.Core.Tests.Settings
         [Fact]
         public void Settings_NoFile_ShouldReturnNull()
         {
-            createTempDirectory();
-            deleteTempFileIfExists();
+            CreateTempDirectory();
+            DeleteTempFileIfExists();
 
-            Assert.Null(settingsReader.ReadFile(tempFileDirectory));
+            Assert.Null(settingsReader.ReadFileAsync(tempFileDirectory).Result);
         }
 
 
-        private void createTempDirectory()
+        private void CreateTempDirectory()
         {
             var directory = Path.GetDirectoryName(tempFilePath);
             Directory.CreateDirectory(directory);
         }
 
 
-        private void deleteTempFileIfExists()
+        private void DeleteTempFileIfExists()
         {
             if (File.Exists(tempFilePath))
                 File.Delete(tempFilePath);

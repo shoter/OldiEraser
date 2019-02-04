@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OldiEraser.Wpf"
+        xmlns:m="clr-namespace:OldiEraser.Wpf.Models"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <DockPanel VerticalAlignment="Stretch">
@@ -26,22 +27,88 @@
             </Grid.RowDefinitions>
 
 
-            <ListView Grid.Row="0" Grid.Column="0">
+            <ListView ItemsSource="{Binding FolderSettingItems}" Name="FolderList" Grid.Row="0" Grid.Column="0" SelectionChanged="FolderList_Selected">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="225" Header="Path" DisplayMemberBinding="{Binding Path=Path.Value}" />
+                        <GridViewColumn Width="75" Header="Days Age" DisplayMemberBinding="{Binding Path=DaysAge.Value}" />
+                        <GridViewColumn Width="100" Header="Behaviour" DisplayMemberBinding="{Binding Path=DeleteBehaviour.Value}" />
+                    </GridView>
+                </ListView.View>
             </ListView>
 
             <GridSplitter Width="5" HorizontalAlignment="Stretch" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" Grid.RowSpan="2"/>
 
             <Border Grid.Row="1" Grid.Column="0">
                 <StackPanel Orientation="Horizontal">
-                    <Button MinWidth="20" Margin="5,10,0,0">+</Button>
-                    <Button MinWidth="20" Margin="5,10,0,0">-</Button>
+                    <Button Name="AddButton" Click="AddButton_Click" MinWidth="20" Margin="5,10,0,0">+</Button>
+                    <Button Name="RemoveButton" Click="RemoveButton_Click" MinWidth="20" Margin="5,10,0,0">-</Button>
                 </StackPanel>
             </Border>
 
-            <StackPanel Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">
-                <Label>Details: </Label>
-                <Label Name="Details"></Label>
-            </StackPanel>
+            <DockPanel Name="DetailsPanel" LastChildFill="True" Grid.Column="2" Grid.Row="0" Grid.RowSpan="2">
+                <Label DockPanel.Dock="Top">Details:</Label>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label>Days Age:</Label>
+                    <TextBox Name="DaysAge" Text="{Binding DaysAge}"></TextBox>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label>Behaviour</Label>
+                    <ComboBox SelectedValue="{Binding BehaviourID.Value}" SelectedValuePath="Id" Name="BehaviourList">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label>Path:</Label>
+                    <Label Content="{Binding Path}" />
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label>Number of files that will be soon deleted:</Label>
+                    <Label Content="{Binding WarningNumberOfFiles}"></Label>
+                </StackPanel>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <Label>Number of directories that will be soon deleted:</Label>
+                    <Label Content="{Binding WarningNumberOfDirectories}"></Label>
+                </StackPanel>
+
+
+                <Grid DockPanel.Dock="Top" VerticalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <DockPanel>
+                        <Label DockPanel.Dock="Top" Margin="0,10,0,0">Files:</Label>
+                        <ListView DockPanel.Dock="Top" ScrollViewer.VerticalScrollBarVisibility="Visible"  ItemsSource="{Binding Files}" Name="DetailFiles">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="275" Header="Path" DisplayMemberBinding="{Binding Path=Path}" />
+                                    <GridViewColumn Width="100" Header="Days to remove" DisplayMemberBinding="{Binding Path=DaysToLive}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </DockPanel>
+                    <DockPanel Grid.Row="1" >
+                        <Label DockPanel.Dock="Top" Margin="0,10,0,0">Directories:</Label>
+                        <ListView DockPanel.Dock="Top" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding Directories}" Name="DetailDirectories" >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Width="275" Header="Path" DisplayMemberBinding="{Binding Path=Path}" />
+                                    <GridViewColumn Width="100" Header="Days to remove" DisplayMemberBinding="{Binding Path=DaysToLive}" />
+                                </GridView>
+                            </ListView.View> 
+                        </ListView>
+                    </DockPanel>
+                </Grid>
+
+            </DockPanel>
         </Grid>
     </DockPanel>
 </Window>

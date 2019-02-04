@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,20 +9,19 @@ namespace OldiEraser.Core.Settings
 {
     public class FolderSettings
     {
-        public uint DayAgeToRemove { get; private set; }
-        public DirectoriesDeleteBehaviour DirectoriesDeleteBehaviour { get; private set; }
+        // Those settings will be saved in the file in given directory. We do not want them.
+
+        public static FolderSettings Default => new FolderSettings(30, DirectoriesDeleteBehaviour.DoNothing);
+
+        
+        public virtual uint DayAgeToRemove { get; internal set; }
+
+        public virtual DirectoriesDeleteBehaviour DirectoriesDeleteBehaviour { get; internal set; }
 
         public FolderSettings(uint dayAgeToRemove, DirectoriesDeleteBehaviour directoriesDeleteBehaviour)
         {
             this.DayAgeToRemove = dayAgeToRemove;
             this.DirectoriesDeleteBehaviour = directoriesDeleteBehaviour;
-        }
-
-        public bool IsOldEnoughToRemove(DateTime now, DateTime date)
-        {
-            var difference = now - date;
-
-            return difference.TotalDays >= DayAgeToRemove;
         }
     }
 }

@@ -8,6 +8,6 @@ namespace OldiEraser.Core.Settings
 {
     public interface IFolderSettingsFileSaver
     {
-        void Save(in FolderSettings folderSettings, string filePath);
+        Task SaveAsync(FolderSettings folderSettings, string filePath);
     }
 }

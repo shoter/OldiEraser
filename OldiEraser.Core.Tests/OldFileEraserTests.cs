@@ -1,6 +1,7 @@
 ﻿using Moq;
 using OldiEraser.Common;
 using OldiEraser.Common.IO;
+using OldiEraser.Core.Scanning;
 using OldiEraser.Core.Settings;
 using OldiEraser.Core.Tests.Configuration;
 using System;
@@ -16,11 +17,13 @@ namespace OldiEraser.Core.Tests
         private readonly Mock<FolderSettingsFileReader> folderSettingsReader = new Mock<FolderSettingsFileReader>();
         private readonly IOldFileEraser oldFileEraser;
         private readonly IFolderSettingsFileSaver folderSettingsSaver = new FolderSettingsFileSaver();
+        private readonly IOldiScanner scanner;
 
         public OldFileEraserTests()
         {
             dateTimeProvider.SetupGet(x => x.Now).Returns(DateTime.Now);
-            oldFileEraser = new OldFileEraser(folderSettingsReader.Object, dateTimeProvider.Object);
+            scanner = new OldiScanner(folderSettingsReader.Object, dateTimeProvider.Object);
+            oldFileEraser = new OldFileEraser(scanner);
             RemoveOldFilesInDirectory();
         }
 
@@ -28,8 +31,8 @@ namespace OldiEraser.Core.Tests
         public void OldFileEraser_CreateNewFiles_ShouldNotRemoveThem()
         {
             var files = CreateFiles(10, testDirectory);
-            folderSettingsReader.Setup(x => x.ReadFile(It.IsAny<string>()))
-                .Returns(new FolderSettings(30, DirectoriesDeleteBehaviour.DoNothing));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(It.IsAny<string>()))
+                .ReturnsAsync(new FolderSettings(30, DirectoriesDeleteBehaviour.DoNothing));
 
             oldFileEraser.EraseOldFiles(TestSettings.Instance.OldFileEraserTestLocation);
 
@@ -43,8 +46,8 @@ namespace OldiEraser.Core.Tests
         public void OldFileEraser_CreateNewFiles_30daysInFutureShouldRemoveThem()
         {
             var files = CreateFiles(10, testDirectory);
-            folderSettingsReader.Setup(x => x.ReadFile(It.IsAny<string>()))
-                .Returns(new FolderSettings(30, DirectoriesDeleteBehaviour.DoNothing));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(It.IsAny<string>()))
+                .ReturnsAsync(new FolderSettings(30, DirectoriesDeleteBehaviour.DoNothing));
             dateTimeProvider.SetupGet(x => x.Now)
                 .Returns(DateTime.Now.AddDays(30));
 
@@ -60,8 +63,8 @@ namespace OldiEraser.Core.Tests
         public void OldFileEraser_CreateNewFiles_shouldNotRemove1DayBefore()
         {
             var files = CreateFiles(10, testDirectory);
-            folderSettingsReader.Setup(x => x.ReadFile(It.IsAny<string>()))
-                .Returns(new FolderSettings(30, DirectoriesDeleteBehaviour.DoNothing));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(It.IsAny<string>()))
+                .ReturnsAsync(new FolderSettings(30, DirectoriesDeleteBehaviour.DoNothing));
             dateTimeProvider.SetupGet(x => x.Now)
                 .Returns(DateTime.Now.AddDays(29));
 
@@ -81,8 +84,8 @@ namespace OldiEraser.Core.Tests
             var filesInside = CreateFiles(5, directory);
 
 
-            folderSettingsReader.Setup(x => x.ReadFile(It.IsAny<string>()))
-                .Returns(new FolderSettings(30, DirectoriesDeleteBehaviour.DoNothing));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(It.IsAny<string>()))
+                .ReturnsAsync(new FolderSettings(30, DirectoriesDeleteBehaviour.DoNothing));
             dateTimeProvider.SetupGet(x => x.Now)
                 .Returns(DateTime.Now.AddYears(10));
 
@@ -100,8 +103,8 @@ namespace OldiEraser.Core.Tests
             var filesInside = CreateFiles(5, directory);
 
 
-            folderSettingsReader.Setup(x => x.ReadFile(It.IsAny<string>()))
-                .Returns(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteOldDirectories));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(It.IsAny<string>()))
+                .ReturnsAsync(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteOldDirectories));
             dateTimeProvider.SetupGet(x => x.Now)
                 .Returns(DateTime.Now.AddYears(10));
 
@@ -117,8 +120,8 @@ namespace OldiEraser.Core.Tests
             var filesInside = CreateFiles(5, directory);
 
 
-            folderSettingsReader.Setup(x => x.ReadFile(It.IsAny<string>()))
-                .Returns(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteOldDirectories));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(It.IsAny<string>()))
+                .ReturnsAsync(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteOldDirectories));
             dateTimeProvider.SetupGet(x => x.Now)
                 .Returns(DateTime.Now.AddDays(29));
 
@@ -134,8 +137,8 @@ namespace OldiEraser.Core.Tests
             var filesInside = CreateFiles(5, directory);
 
 
-            folderSettingsReader.Setup(x => x.ReadFile(It.IsAny<string>()))
-                .Returns(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteFilesInside));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(It.IsAny<string>()))
+                .ReturnsAsync(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteFilesInside));
             dateTimeProvider.SetupGet(x => x.Now)
                 .Returns(DateTime.Now.AddDays(31));
 
@@ -153,8 +156,8 @@ namespace OldiEraser.Core.Tests
             var filesInside = CreateFiles(5, directory);
 
 
-            folderSettingsReader.Setup(x => x.ReadFile(It.IsAny<string>()))
-                .Returns(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteFilesInside));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(It.IsAny<string>()))
+                .ReturnsAsync(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteFilesInside));
             dateTimeProvider.SetupGet(x => x.Now)
                 .Returns(DateTime.Now.AddDays(29));
 
@@ -172,8 +175,8 @@ namespace OldiEraser.Core.Tests
             var filesInside = CreateFiles(5, directory);
 
 
-            folderSettingsReader.Setup(x => x.ReadFile(It.IsAny<string>()))
-                .Returns(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteFilesInside));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(It.IsAny<string>()))
+                .ReturnsAsync(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteFilesInside));
             dateTimeProvider.SetupGet(x => x.Now)
                 .Returns(DateTime.Now.AddDays(31));
 
@@ -192,10 +195,10 @@ namespace OldiEraser.Core.Tests
             var filesInside = CreateFiles(5, directory);
 
 
-            folderSettingsReader.Setup(x => x.ReadFile(testDirectory))
-                .Returns(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteFilesInside));
-            folderSettingsReader.Setup(x => x.ReadFile(settingsDirectory))
-                .Returns(new FolderSettings(45, DirectoriesDeleteBehaviour.DeleteFilesInside));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(testDirectory))
+                .ReturnsAsync(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteFilesInside));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(settingsDirectory))
+                .ReturnsAsync(new FolderSettings(45, DirectoriesDeleteBehaviour.DeleteFilesInside));
             dateTimeProvider.SetupGet(x => x.Now)
                 .Returns(DateTime.Now.AddDays(44));
 
@@ -214,10 +217,10 @@ namespace OldiEraser.Core.Tests
             var filesInside = CreateFiles(5, directory);
 
 
-            folderSettingsReader.Setup(x => x.ReadFile(testDirectory))
-                .Returns(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteFilesInside));
-            folderSettingsReader.Setup(x => x.ReadFile(settingsDirectory))
-                .Returns(new FolderSettings(45, DirectoriesDeleteBehaviour.DoNothing));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(testDirectory))
+                .ReturnsAsync(new FolderSettings(30, DirectoriesDeleteBehaviour.DeleteFilesInside));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(settingsDirectory))
+                .ReturnsAsync(new FolderSettings(45, DirectoriesDeleteBehaviour.DoNothing));
             dateTimeProvider.SetupGet(x => x.Now)
                 .Returns(DateTime.Now.AddDays(44));
 
@@ -236,10 +239,10 @@ namespace OldiEraser.Core.Tests
             var filesInside = CreateFiles(5, directory);
 
 
-            folderSettingsReader.Setup(x => x.ReadFile(It.Is<string>(s => s.Contains(testDirectory))))
-                .Returns(new FolderSettings(45, DirectoriesDeleteBehaviour.DeleteFilesInside));
-            folderSettingsReader.Setup(x => x.ReadFile(It.Is<string>(s => s.Contains(settingsDirectory))))
-                .Returns(new FolderSettings(35, DirectoriesDeleteBehaviour.DeleteFilesInside));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(It.Is<string>(s => s.Contains(testDirectory))))
+                .ReturnsAsync(new FolderSettings(45, DirectoriesDeleteBehaviour.DeleteFilesInside));
+            folderSettingsReader.Setup(x => x.ReadFileAsync(It.Is<string>(s => s.Contains(settingsDirectory))))
+                .ReturnsAsync(new FolderSettings(35, DirectoriesDeleteBehaviour.DeleteFilesInside));
             dateTimeProvider.SetupGet(x => x.Now)
                 .Returns(DateTime.Now.AddDays(44));
 

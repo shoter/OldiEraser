@@ -9,13 +9,15 @@ namespace OldiEraser.Core
 {
     public class AppData
     {
-        public AppData Default => new AppData()
-        {
-            FolderSettings = new List<FolderSettings>()
-        };
+        public static AppData Default = new AppData();
 
-        public List<FolderSettings> FolderSettings { get; set;}
+        public List<SpecificFolderSetting> FolderSettings { get; set; } = new List<SpecificFolderSetting>();
 
+        public bool EnableAutosave { get; set; } = true;
+
+        public DateTime LastEraseTime { get; set; } = DateTime.Now;
+
+        public AppData() { }
 
     }
 }
