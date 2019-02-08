@@ -15,7 +15,9 @@ namespace OldiEraser.Wpf.Tools
             get => link.Value;
             set
             {
+                var prev = link.Value;
                 link.Value = value;
+                FireEvent(this, value, prev);
             }
         }
 
