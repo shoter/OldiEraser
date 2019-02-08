@@ -1,4 +1,6 @@
 language: csharp
-solution: solution-name.sln
+solution: OldiEraser.sln
 mono: none
 dotnet: 2.1.502
+script:
+ - dotnet restore
